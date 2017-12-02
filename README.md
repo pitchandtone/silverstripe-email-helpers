@@ -16,7 +16,7 @@ attributes on the actual html tags to promote better compatibility across
 email clients.
 
 ## Requirements
-Silverstripe 3.0+
+Silverstripe 4.0+
 
 ## Installation
 Install via composer:

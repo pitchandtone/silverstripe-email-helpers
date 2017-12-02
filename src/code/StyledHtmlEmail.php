@@ -1,4 +1,5 @@
 <?php
+namespace MarkGuinn\EmailHelpers;
 use Pelago\Emogrifier;
 
 /**

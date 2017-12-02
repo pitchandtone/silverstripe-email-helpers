@@ -1,4 +1,5 @@
 <?php
+namespace MarkGuinn\EmailHelpers;
 /**
  * Sends a test email to verify that they're going through.
  *

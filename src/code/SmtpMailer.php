@@ -1,5 +1,5 @@
 <?php
-
+namespace MarkGuinn\EmailHelpers;
 /**
  * This is a simple extension of the built in SS email class
  * that uses the PHPMailer library to send emails via SMTP.

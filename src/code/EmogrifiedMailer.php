@@ -1,4 +1,5 @@
 <?php
+namespace MarkGuinn\EmailHelpers;
 /**
  * This is a simple extension of the built in SS email class
  * that uses the PHPMailer library to send emails via mail() and Emogifier to inline CSS.
@@ -15,7 +16,7 @@ class EmogrifiedMailer extends Mailer
      * @var string $charset - charset for mail message
      */
     protected $charset;
-	
+
     /**
      * CSS file containing classes to inline into the email's HTML
      *
@@ -56,7 +57,7 @@ class EmogrifiedMailer extends Mailer
     {
         return $this->charset;
     }
-	
+
     /**
      * @return string
      */
@@ -86,23 +87,23 @@ class EmogrifiedMailer extends Mailer
         if ($this->charset) {
             $mail->CharSet = $this->charset;
         }
-        
+
         return $mail;
     }
-	
+
     /**
      * shared setup for both html and plain
      */
     protected function initEmail($to, $from, $subject, $attachedFiles = false, $customheaders = false)
     {
         $mail = $this->initMailer();
-        
+
         // set the from
         list($mail->From, $mail->FromName) = $this->splitName($from);
-        
+
         // set the to
         $this->explodeList($to, $mail, 'AddAddress');
-        
+
         // set cc and bcc if needed
         if (is_array($customheaders) && isset($customheaders['Cc'])) {
             $this->explodeList($customheaders['Cc'], $mail, 'AddCC');
@@ -113,7 +114,7 @@ class EmogrifiedMailer extends Mailer
             $this->explodeList($customheaders['Bcc'], $mail, 'AddBCC');
             unset($customheaders['Bcc']);
         }
-    
+
         // set up the subject
         $mail->Subject = $subject;
 
@@ -130,7 +131,7 @@ class EmogrifiedMailer extends Mailer
                 }
             }
         }
-        
+
         // Messages with the X-SilverStripeMessageID header can be tracked
         if (isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
             $bounceAddress = BOUNCE_EMAIL;
@@ -141,21 +142,21 @@ class EmogrifiedMailer extends Mailer
         } else {
             $bounceAddress = $from;
         }
-        
+
         $headers["X-Mailer"]    = X_MAILER;
         if (!isset($customheaders["X-Priority"])) {
             $headers["X-Priority"]    = 3;
         }
-    
+
         $headers = array_merge((array)$headers, (array)$customheaders);
 
         foreach ($headers as $k => $v) {
             $mail->AddCustomHeader("$k: $v");
         }
-        
+
         return $mail;
     }
-    
+
     /**
      * takes an email with or without a name and returns
      * email and name as separate parts
@@ -170,7 +171,7 @@ class EmogrifiedMailer extends Mailer
             return array($in, '');
         }
     }
-    
+
     /**
      * takes a list of emails, splits out the name and calls
      * the given function. meant to be used with AddAddress, AddBcc and AddCc
@@ -183,7 +184,7 @@ class EmogrifiedMailer extends Mailer
             $mail->$func($a, $b);
         }
     }
-    
+
     /**
      * Send a plain-text email.
      *
@@ -199,10 +200,10 @@ class EmogrifiedMailer extends Mailer
     public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false)
     {
         $mail = $this->initEmail($to, $from, $subject, $attachedFiles, $customheaders);
-        
+
         // set up the body
         $mail->Body = $plainContent;
-        
+
         // send and return
         if ($mail->Send()) {
             return array($to,$subject,$plainContent,$customheaders);
